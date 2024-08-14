@@ -1,5 +1,7 @@
 # News Reading App
 
+https://github.com/user-attachments/assets/e1c4f546-cc1b-4a63-8cd9-47d198c32fa3
+
 ## Overview
 
 The **News Reading App** is a dynamic news article reading platform that delivers the latest news to users with enhanced performance and user experience. Built using React.js, the app leverages the News API to fetch and display news articles, incorporating features like light/dark mode, lazy loading, and infinite scroll to optimize performance and usability.
