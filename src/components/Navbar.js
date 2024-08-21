@@ -30,7 +30,7 @@ export default function Navbar(props) {
           class="d-inline-block align-top mx-2"
           alt=""
         />
-        NewsDonkey
+        Daily News
       </Link>
       <button
         className="navbar-toggler"
