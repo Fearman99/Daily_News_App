@@ -15,7 +15,7 @@ const News = (props) => {
 
   const updateNews = async () => {
     props.setProgress(10);
-    const url = `https://api.thenewsapi.com/v1/news/${props.category}?api_token=VP7ihv7z5TikvOourlS4TbwJWATUQNyQSAJjQAG4&search=forex%20%2B%20%28usd%20%7C%20gbp%29%20-cad&language=en&categories=business%2Ctech&exclude_categories=travel&published_after=2025-01-08&page=${page}`;
+    const url = `https://api.thenewsapi.com/v1/news/all?api_token=VP7ihv7z5TikvOourlS4TbwJWATUQNyQSAJjQAG4&search=forex%20%2B%20%28usd%20%7C%20gbp%29%20-cad&language=en&categories=${props.category}%2Ctech&exclude_categories=travel&published_after=2025-01-08&page=${page}`;
     setLoading(true);
     props.setProgress(30);
     let data = await fetch(url);
@@ -36,7 +36,7 @@ const News = (props) => {
   const fetchMoreData = async () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    const url = `https://api.thenewsapi.com/v1/news/${props.category}?api_token=VP7ihv7z5TikvOourlS4TbwJWATUQNyQSAJjQAG4&search=forex%20%2B%20%28usd%20%7C%20gbp%29%20-cad&language=en&categories=business%2Ctech&exclude_categories=travel&published_after=2025-01-08&page=${nextPage}`;
+    const url = `https://api.thenewsapi.com/v1/news/all?api_token=VP7ihv7z5TikvOourlS4TbwJWATUQNyQSAJjQAG4&search=forex%20%2B%20%28usd%20%7C%20gbp%29%20-cad&language=en&categories${props.category}%2Ctech&exclude_categories=travel&published_after=2025-01-08&page=${nextPage}`;
     let data = await fetch(url);
     let parsedData = await data.json();
     setArticles(articles.concat(parsedData.data)); // Append new articles
