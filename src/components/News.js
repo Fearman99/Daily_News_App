@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewsItem from "./NewsItem.js";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
@@ -12,48 +12,42 @@ const News = (props) => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  
-  
 
   const updateNews = async () => {
     props.setProgress(10);
-    const url = `https://saurav.tech/NewsAPI/top-headlines/category/${props.category}/${props.country}.json`
+    const url = `https://api.thenewsapi.com/v1/news/all?api_token=VP7ihv7z5TikvOourlS4TbwJWATUQNyQSAJjQAG4&search=forex%20%2B%20%28usd%20%7C%20gbp%29%20-cad&language=en&categories=business%2Ctech&exclude_categories=travel&published_after=2025-01-08&page=${page}`;
     setLoading(true);
     props.setProgress(30);
     let data = await fetch(url);
     props.setProgress(50);
     let parsedData = await data.json();
     props.setProgress(70);
-    setArticles(parsedData.articles);
-    setTotalResults(parsedData.totalResults);
+    setArticles(parsedData.data); // Updated for the new API response structure
+    setTotalResults(parsedData.meta.found); // Updated for the new API response structure
     setLoading(false);
     props.setProgress(100);
   };
 
-   useEffect
-    (() => {
-      document.title = `NewsDonkey - ${capitalize(props.category)}`;
-      updateNews();
-    },[]);
+  useEffect(() => {
+    document.title = `NewsDonkey - ${capitalize(props.category)}`;
+    updateNews();
+  }, []);
 
   const fetchMoreData = async () => {
-    setPage(page + 1);
-    const url = `https://saurav.tech/NewsAPI/top-headlines/category/${props.category}/${props.country}.json`;
+    const nextPage = page + 1;
+    setPage(nextPage);
+    const url = `https://api.thenewsapi.com/v1/news/all?api_token=VP7ihv7z5TikvOourlS4TbwJWATUQNyQSAJjQAG4&search=forex%20%2B%20%28usd%20%7C%20gbp%29%20-cad&language=en&categories=business%2Ctech&exclude_categories=travel&published_after=2025-01-08&page=${nextPage}`;
     let data = await fetch(url);
     let parsedData = await data.json();
-    setArticles(parsedData.articles.concat(parsedData.articles));
-    setTotalResults(parsedData.totalResults);
+    setArticles(articles.concat(parsedData.data)); // Append new articles
   };
-
 
   return (
     <>
-      <h1 
-        style={{ textAlign: "center", margin: "33px 0px", marginTop: "90px"}}
+      <h1
+        style={{ textAlign: "center", margin: "33px 0px", marginTop: "90px" }}
       >
-        NewsDonkey - Top
-        {` ${capitalize(props.category)} `}
-        Headlines
+        NewsDonkey - Top {` ${capitalize(props.category)} `} Headlines
       </h1>
       {loading && <Spinner />}
       <InfiniteScroll
@@ -70,13 +64,15 @@ const News = (props) => {
                   <NewsItem
                     title={ele.title ? ele.title.slice(0, 66) + ".." : ""}
                     description={
-                      ele.description ? ele.description.slice(0, 97) + ".." : ""
+                      ele.description
+                        ? ele.description.slice(0, 97) + ".."
+                        : ""
                     }
-                    imgURL={ele.urlToImage}
+                    imgURL={ele.image_url} // Updated for the new API
                     newsURL={ele.url}
-                    author={!ele.author ? (ele.author = "unknown") : ele.author}
-                    time={ele.publishedAt}
-                    source={ele.source.name}
+                    author={!ele.author ? "unknown" : ele.author}
+                    time={ele.published_at} // Updated for the new API
+                    source={ele.source} // Updated for the new API
                     mode={props.mode}
                   />
                 </div>
@@ -93,12 +89,10 @@ News.defaultProps = {
   country: "in",
   pageSize: 6,
   category: "general",
-  apiKey: "900bf35fa6e04bb1a0a53661fd8102d3",
 };
 News.propTypes = {
   country: PropTypes.string,
   pageSize: PropTypes.number,
   category: PropTypes.string,
-  apiKey: PropTypes.string,
 };
 export default News;
